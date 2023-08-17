@@ -7,6 +7,7 @@ import IntroStep from "components/HomeSteps/Intro";
 import StartStep from "components/HomeSteps/Start";
 import PlayersStep from "components/HomeSteps/Players";
 import TimePlayersStep from "components/HomeSteps/TimePlayers";
+import TimerStep from "components/HomeSteps/Timer";
 
 export default function Home() {
   const [step, setStep] = useState<"intro" | "time-players" | "start" | "players" | "timer">("intro");
@@ -33,7 +34,10 @@ export default function Home() {
               {step === "intro" && <IntroStep onNext={() => setStep("time-players")} />}
               {step === "time-players" && <TimePlayersStep onNext={() => setStep("start")} />}
               {step === "start" && <StartStep onNext={() => setStep("players")} />}
-              {step === "players" && <PlayersStep onNext={() => setStep("intro")} />}
+              {step === "players" && <PlayersStep onNext={() => setStep("timer")} />}
+              {step === "timer" && (
+                <TimerStep onNext={() => setStep("intro")} onRestart={() => setStep("time-players")} />
+              )}
             </Card>
             <Box
               mt={2}

@@ -44,6 +44,12 @@ const gameSlice = createSlice({
       state.gameDurationInSeconds = action.payload.gameDurationInSeconds;
       state.word = word;
     },
+    selectNewWord(state) {
+      const word = getRandomWord();
+
+      state.status = "generated";
+      state.word = word;
+    },
     startGame(state) {
       state.status = "started";
     },
@@ -58,4 +64,4 @@ const gameSlice = createSlice({
 
 export default gameSlice.reducer;
 
-export const { finishGame, generateGame, setElapsedTime, startGame } = gameSlice.actions;
+export const { finishGame, generateGame, setElapsedTime, startGame, selectNewWord } = gameSlice.actions;
