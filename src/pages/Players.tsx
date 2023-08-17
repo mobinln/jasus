@@ -3,14 +3,17 @@ import { Typography, Button, LinearProgress, Box } from "@mui/material";
 import { BiChevronRight } from "react-icons/bi";
 import { BsPlusCircleDotted } from "react-icons/bs";
 import { GiTabletopPlayers, GiSpy, GiPerson } from "react-icons/gi";
+import { Navigate, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
-import { useGamePlayers, useGameWord } from "features/game/hooks";
-import { useAppDispatch } from "store";
-import { selectNewWord } from "features/game/slice";
 import Confirm from "components/Confirm";
 
-export default function PlayersStep({ onNext }: { onNext: () => void }) {
+import { useAppDispatch } from "store";
+import { useGamePlayers, useGameWord } from "features/game/hooks";
+import { selectNewWord } from "features/game/slice";
+
+export default function PlayersStep() {
+  const navigate = useNavigate();
   const players = useGamePlayers();
   const word = useGameWord();
   const dispatch = useAppDispatch();
@@ -29,7 +32,7 @@ export default function PlayersStep({ onNext }: { onNext: () => void }) {
       setProgress((p) => p + 1);
       setProgressBar(((progress + 1) * 100) / (players?.length || 0));
       if (progress + 1 === players?.length) {
-        onNext();
+        navigate("/timer");
       }
     }
   };
@@ -38,6 +41,12 @@ export default function PlayersStep({ onNext }: { onNext: () => void }) {
     dispatch(selectNewWord());
     setConfirm(false);
   };
+
+  if (!players) {
+    return <Navigate to="/" />;
+  }
+
+  const canChangeWord = players[0]?.type === "spy" ? progress < 2 : progress < 1;
 
   return (
     <>
@@ -87,7 +96,7 @@ export default function PlayersStep({ onNext }: { onNext: () => void }) {
           <Button variant="contained" endIcon={<BiChevronRight />} onClick={handleShow}>
             {progress < (players?.length || 0) ? "نمایش" : "شروع بازی"}
           </Button>
-          {progress < 1 && (
+          {canChangeWord && (
             <Button variant="contained" endIcon={<BsPlusCircleDotted />} onClick={() => setConfirm(true)}>
               تعویض کلمه
             </Button>

@@ -11,3 +11,7 @@ export function useGameDuration() {
 export function useGameWord() {
   return useAppSelector((s) => s.game.word);
 }
+
+export function useGame() {
+  return useAppSelector((s) => s.game);
+}

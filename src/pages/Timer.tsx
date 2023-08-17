@@ -7,9 +7,14 @@ import useCounter from "hooks/useCounter";
 import { useGameDuration } from "features/game/hooks";
 import { formatSeconds } from "logic/date";
 import Confirm from "components/Confirm";
+import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "store";
+import { finishGame, setElapsedTime } from "features/game/slice";
 
-export default function TimerStep({ onNext, onRestart }: { onNext: () => void; onRestart: () => void }) {
+export default function TimerStep() {
   const duration = useGameDuration();
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const [start, setStart] = useState(false);
   const [confirm, setConfirm] = useState(false);
@@ -17,9 +22,12 @@ export default function TimerStep({ onNext, onRestart }: { onNext: () => void; o
 
   useEffect(() => {
     if (time === 0) {
-      onNext();
+      dispatch(finishGame());
+      navigate("/");
+    } else {
+      dispatch(setElapsedTime({ elapsedTime: time }));
     }
-  }, [onNext, time]);
+  }, [dispatch, navigate, time]);
 
   return (
     <>
@@ -28,8 +36,8 @@ export default function TimerStep({ onNext, onRestart }: { onNext: () => void; o
         content="آیا مطمئنید که میخواهید از این بازی خارج شوید؟"
         onClose={() => setConfirm(false)}
         onConfirm={() => {
-          onRestart();
           setConfirm(false);
+          navigate("/time-players");
         }}
       />
       <motion.div

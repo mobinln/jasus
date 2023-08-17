@@ -1,11 +1,13 @@
-import { Typography, Button, Stack, TextField } from "@mui/material";
+import { Typography, Button, Stack, TextField, Slider, MenuItem } from "@mui/material";
 import { GiPlayButton } from "react-icons/gi";
 import { motion } from "framer-motion";
 import { Formik, Form } from "formik";
 import { useAppDispatch } from "store";
 import { generateGame } from "features/game/slice";
+import { useNavigate } from "react-router-dom";
 
-export default function TimePlayersStep({ onNext }: { onNext: () => void }) {
+export default function TimePlayersStep() {
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
   return (
@@ -42,15 +44,35 @@ export default function TimePlayersStep({ onNext }: { onNext: () => void }) {
             })
           );
 
-          onNext();
+          navigate("/start");
         }}
       >
-        {({ getFieldProps, isSubmitting, isValid }) => (
+        {({ getFieldProps, isSubmitting, isValid, values }) => (
           <Form style={{ width: "100%" }}>
-            <Stack width="100%" gap={2}>
-              <TextField {...getFieldProps("numberOfPlayers")} type="number" label="تعداد کل بازیکنان" fullWidth />
-              <TextField {...getFieldProps("numberOfSpies")} type="number" label="تعداد جاسوس ها" fullWidth />
-              <TextField {...getFieldProps("gameDuration")} type="number" label="مدت زمان کل بازی (دقیقه)" fullWidth />
+            <Stack mt={2} width="100%" gap={2}>
+              <Typography>تعداد کل بازیکنان</Typography>
+              <Slider valueLabelDisplay="auto" min={2} max={40} {...getFieldProps("numberOfPlayers")} />
+              <Typography>تعداد جاسوس ها</Typography>
+              <Slider
+                valueLabelDisplay="auto"
+                min={1}
+                max={values.numberOfPlayers ? values.numberOfPlayers - 1 : 100}
+                {...getFieldProps("numberOfSpies")}
+              />
+              <Typography>مدت زمان کل بازی (دقیقه)</Typography>
+              <TextField
+                {...getFieldProps("gameDuration")}
+                type="number"
+                placeholder="مدت زمان کل بازی (دقیقه)"
+                fullWidth
+                select
+              >
+                {[1, 2, 5, 10, 15, 20, 30, 45, 60, 75, 90, 120].map((v) => (
+                  <MenuItem key={v} value={v}>
+                    {v}
+                  </MenuItem>
+                ))}
+              </TextField>
               <Button type="submit" variant="contained" endIcon={<GiPlayButton />} disabled={isSubmitting || !isValid}>
                 ساخت بازی
               </Button>

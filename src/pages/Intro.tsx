@@ -1,8 +1,11 @@
 import { Box, Typography, Button } from "@mui/material";
 import { BiChevronRight } from "react-icons/bi";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
-export default function StartStep({ onNext }: { onNext: () => void }) {
+export default function IntroStep() {
+  const navigate = useNavigate();
+
   return (
     <motion.div
       initial={{ x: -100, opacity: 0 }}
@@ -20,11 +23,12 @@ export default function StartStep({ onNext }: { onNext: () => void }) {
         جاسوس
       </Typography>
       <Typography my={3} textAlign="justify">
-        بازیتون ساخته شد، آماده شروع مسابقه هستین؟
+        سلام، به بازی جاسوس خوش اومدی، احتمالا با این بازی آشنا هستین اما اگر نه روی لینک زیر کلیک کنین تا براتون توضیح
+        بدم 😄
       </Typography>
       <Box width="100%" mt={2} display="flex" alignItems="center" justifyContent="space-between">
-        <Button variant="contained" endIcon={<BiChevronRight />} onClick={onNext}>
-          شروع
+        <Button variant="contained" endIcon={<BiChevronRight />} onClick={() => navigate("/time-players")}>
+          بعدی
         </Button>
       </Box>
     </motion.div>

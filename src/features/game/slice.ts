@@ -8,7 +8,7 @@ type playerType = {
 };
 
 type gameSliceType = {
-  status: "idle" | "generated" | "started" | "finished";
+  status: "idle" | "generated" | "started";
   players?: playerType[];
   numberOfPlayers?: number;
   numberOfSpies?: number;
@@ -57,7 +57,13 @@ const gameSlice = createSlice({
       state.elapsedTime = action.payload.elapsedTime;
     },
     finishGame(state) {
-      state.status = "finished";
+      state.status = "idle";
+      state.players = undefined;
+      state.numberOfPlayers = undefined;
+      state.numberOfSpies = undefined;
+      state.gameDurationInSeconds = undefined;
+      state.elapsedTime = undefined;
+      state.word = undefined;
     },
   },
 });
